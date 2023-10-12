@@ -41,6 +41,10 @@ add_executable(${TARGET_NAME_SUB} ${ecal_rcv_src})
 add_executable(${TARGET_NAME_PUB} ${ecal_snd_src})
 add_executable(${TARGET_NAME_PUB_WEBCAM} ${ecal_snd_webcam})
 
+if (MSVC)
+        set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS /STACK:200000000)
+endif (MSVC)
+
 PROTOBUF_TARGET_CPP(${TARGET_NAME_SUB} ${CMAKE_CURRENT_SOURCE_DIR}/proto/ ${protobuf_files})
 PROTOBUF_TARGET_CPP(${TARGET_NAME_PUB} ${CMAKE_CURRENT_SOURCE_DIR}/proto/ ${protobuf_files})
 PROTOBUF_TARGET_CPP(${TARGET_NAME_PUB_WEBCAM} ${CMAKE_CURRENT_SOURCE_DIR}/proto/ ${protobuf_files})

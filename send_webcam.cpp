@@ -41,14 +41,24 @@ int main(int argc, char *argv[])
             break;
         }
 
-        imshow("Live", frame);
+        cv::imshow("Live", frame);
+
+        cv::uint8_t image[640 * 480 * 3];
+        int idx = 0;
+        for(int col=0; col<frame.cols; col++){
+            for(int row=0; row<frame.rows; row++){
+                image[idx++] = frame.at<cv::Vec3b>(row,col)[0];
+                image[idx++] = frame.at<cv::Vec3b>(row,col)[1];
+                image[idx++] = frame.at<cv::Vec3b>(row,col)[2];
+            }
+        }
 
         protobuf_message.mutable_frame()->set_height(frame.cols);
         protobuf_message.mutable_frame()->set_width(frame.rows);
         protobuf_message.mutable_frame()->set_name("Logitech C920");
         protobuf_message.mutable_frame()->set_imagecompression(pb::UNCOMPRESSED);
         protobuf_message.mutable_frame()->set_imageformat(pb::RGB);
-        // protobuf_message.mutable_frame()->set_data(&(frame.data), frame.rows * frame.cols * 24);
+        protobuf_message.mutable_frame()->set_data(&image, frame.rows * frame.cols * 3);
         pub_mensaje.Send(protobuf_message);
         eCAL::Process::SleepMS(5);
 
